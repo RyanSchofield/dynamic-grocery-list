@@ -10,6 +10,9 @@
     	}
 
     	li {
+            display: flex;
+            justify-content: center;
+            align-items: center;
     		background-color: white;
     		padding: 5px;
     		margin: 10px;
@@ -39,14 +42,14 @@
 
 
 			
-			if (sessionStorage.getItem("ingredients") == ""){
+			if (localStorage.getItem("ingredients") == ""){
 
     			var ingredientList = [];
-				sessionStorage.setItem("ingredients", JSON.stringify(ingredientList));
+				localStorage.setItem("ingredients", JSON.stringify(ingredientList));
 			}
 			
 
-			for (var i in JSON.parse(sessionStorage.getItem("ingredients"))) {
+			for (var i in JSON.parse(localStorage.getItem("ingredients"))) {
 				li = document.createElement("li");
 				li.setAttribute('onclick',"removeItem(this)");
 				li.appendChild(document.createTextNode(JSON.parse(localStorage.getItem("ingredients"))[i]));
@@ -66,10 +69,10 @@
     		li.appendChild(document.createTextNode(newEntry.value));
     		ul.appendChild(li);
 
-    		var oldList = JSON.parse(sessionStorage.getItem("ingredients"));
+    		var oldList = JSON.parse(localStorage.getItem("ingredients"));
     		oldList.push(newEntry.value);
 
-    		sessionStorage.setItem("ingredients", JSON.stringify(oldList));
+    		localStorage.setItem("ingredients", JSON.stringify(oldList));
     		
 
     		document.getElementById("new-entry").value = "";
@@ -79,11 +82,11 @@
 		function removeItem(el) {
 			if (confirm('Remove ' + el.textContent + '?')){
 				el.remove();
-				var oldList = JSON.parse(sessionStorage.getItem("ingredients"));
+				var oldList = JSON.parse(localStorage.getItem("ingredients"));
 				var index = oldList.indexOf(el.textContent);
 				oldList.splice(index, 1);
 
-				sessionStorage.setItem("ingredients", JSON.stringify(oldList));
+				localStorage.setItem("ingredients", JSON.stringify(oldList));
 			}
 		}
 
