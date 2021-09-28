@@ -39,14 +39,14 @@
 
 
 			
-			if (localStorage.getItem("ingredients") == ""){
+			if (sessionStorage.getItem("ingredients") == ""){
 
     			var ingredientList = [];
-				localStorage.setItem("ingredients", JSON.stringify(ingredientList));
+				sessionStorage.setItem("ingredients", JSON.stringify(ingredientList));
 			}
 			
 
-			for (var i in JSON.parse(localStorage.getItem("ingredients"))) {
+			for (var i in JSON.parse(sessionStorage.getItem("ingredients"))) {
 				li = document.createElement("li");
 				li.setAttribute('onclick',"removeItem(this)");
 				li.appendChild(document.createTextNode(JSON.parse(localStorage.getItem("ingredients"))[i]));
@@ -57,33 +57,33 @@
 		function addItem(){
 
     		var ul = document.getElementById("dynamic-list");
-    		var candidate = document.getElementById("candidate");
+    		var newEntry = document.getElementById("new-entry");
     		var li = document.createElement("li");
 
-    		li.setAttribute('id',candidate.value);
+    		li.setAttribute('id', newEntry.value);
     		li.setAttribute('onclick',"removeItem(this)");
 
-    		li.appendChild(document.createTextNode(candidate.value));
+    		li.appendChild(document.createTextNode(newEntry.value));
     		ul.appendChild(li);
 
-    		var oldList = JSON.parse(localStorage.getItem("ingredients"));
-    		oldList.push(candidate.value);
+    		var oldList = JSON.parse(sessionStorage.getItem("ingredients"));
+    		oldList.push(newEntry.value);
 
-    		localStorage.setItem("ingredients", JSON.stringify(oldList));
+    		sessionStorage.setItem("ingredients", JSON.stringify(oldList));
     		
 
-    		document.getElementById("candidate").value = "";
+    		document.getElementById("new-entry").value = "";
 
 		}
 
 		function removeItem(el) {
 			if (confirm('Remove ' + el.textContent + '?')){
 				el.remove();
-				var oldList = JSON.parse(localStorage.getItem("ingredients"));
+				var oldList = JSON.parse(sessionStorage.getItem("ingredients"));
 				var index = oldList.indexOf(el.textContent);
 				oldList.splice(index, 1);
 
-				localStorage.setItem("ingredients", JSON.stringify(oldList));
+				sessionStorage.setItem("ingredients", JSON.stringify(oldList));
 			}
 		}
 
@@ -92,7 +92,7 @@
 
     <ul id="dynamic-list"></ul>
 
-    <input type="text" id="candidate"/>
+    <input type="text" id="new-entry"/>
     <button onclick="addItem()">add item</button>
     
     <script> loadList(); </script>
