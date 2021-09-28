@@ -42,7 +42,7 @@
 
 
 			
-			if (localStorage.getItem("ingredients") == ""){
+			if (localStorage.getItem("ingredients") == null){
 
     			var ingredientList = [];
 				localStorage.setItem("ingredients", JSON.stringify(ingredientList));
