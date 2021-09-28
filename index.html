@@ -47,14 +47,15 @@
     			var ingredientList = [];
 				localStorage.setItem("ingredients", JSON.stringify(ingredientList));
 			}
-			
+			else {
 
-			for (var i in JSON.parse(localStorage.getItem("ingredients"))) {
-				li = document.createElement("li");
-				li.setAttribute('onclick',"removeItem(this)");
-				li.appendChild(document.createTextNode(JSON.parse(localStorage.getItem("ingredients"))[i]));
-				ul.appendChild(li);
-			}
+			     for (var i in JSON.parse(localStorage.getItem("ingredients"))) {
+			     	li = document.createElement("li");
+			     	li.setAttribute('onclick',"removeItem(this)");
+			     	li.appendChild(document.createTextNode(JSON.parse(localStorage.getItem("ingredients"))[i]));
+			     	ul.appendChild(li);
+			     }
+            }
 		}
 
 		function addItem(){
