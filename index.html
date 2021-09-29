@@ -1,106 +1,263 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Shopping List</title>
-    <style>
-    	body {
-    		background-color: linen;
-    		text-align: center;
-    	}
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Dynamic List</title>
+            <style>
+                body {
+                    background-color: linen;
+                    text-align: center;
+                }
 
-    	li {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-    		background-color: white;
-    		padding: 5px;
-    		margin: 10px;
-    		list-style-type: none;
-    		border-radius: 15px;
-    		border-style: outset;
-    		border-color: #6495ED;
-    		
-    		
+                li {
+                    background-color: AliceBlue;
+                    list-style-type: none;
+                    border-radius: 15px;
+                    padding: 25px;
+                    margin: 25px;
+                }
 
-
-    	}
-    </style>
-</head>
-<body>
-	<script>
-
-
-
-		function loadList() {
-
-
-			var ul = document.getElementById("dynamic-list");
-
-			var li;
+                li.ingredient-entry {
+                
+                    background-color: white;
+                    padding: 5px;
+                    margin: 10px;
+                    list-style-type: none;
+                    border-radius: 15px;
+                    border-style: outset;
+                    border-color: #6495ED;
+                    font-size: 150%;
+               }
 
 
 
-			
-			if (localStorage.getItem("ingredients") == null){
-
-    			var ingredientList = [];
-				localStorage.setItem("ingredients", JSON.stringify(ingredientList));
-			}
-			else {
-
-			     for (var i in JSON.parse(localStorage.getItem("ingredients"))) {
-			     	li = document.createElement("li");
-			     	li.setAttribute('onclick',"removeItem(this)");
-			     	li.appendChild(document.createTextNode(JSON.parse(localStorage.getItem("ingredients"))[i]));
-			     	ul.appendChild(li);
-			     }
-            }
-		}
-
-		function addItem(){
-
-    		var ul = document.getElementById("dynamic-list");
-    		var newEntry = document.getElementById("new-entry");
-    		var li = document.createElement("li");
-
-    		li.setAttribute('id', newEntry.value);
-    		li.setAttribute('onclick',"removeItem(this)");
-
-    		li.appendChild(document.createTextNode(newEntry.value));
-    		ul.appendChild(li);
-
-    		var oldList = JSON.parse(localStorage.getItem("ingredients"));
-    		oldList.push(newEntry.value);
-
-    		localStorage.setItem("ingredients", JSON.stringify(oldList));
-    		
-
-    		document.getElementById("new-entry").value = "";
-
-		}
-
-		function removeItem(el) {
-			if (confirm('Remove ' + el.textContent + '?')){
-				el.remove();
-				var oldList = JSON.parse(localStorage.getItem("ingredients"));
-				var index = oldList.indexOf(el.textContent);
-				oldList.splice(index, 1);
-
-				localStorage.setItem("ingredients", JSON.stringify(oldList));
-			}
-		}
-
-		
-	</script>
-
-    <ul id="dynamic-list"></ul>
-
-    <input type="text" id="new-entry"/>
-    <button onclick="addItem()">add item</button>
+               
+            </style>
+        </head>
+        <body>
+            <script>
     
-    <script> loadList(); </script>
+
+
+
+
+                function loadList() {
+
+                    var ul_recipes = document.getElementById("recipe-list");
+                    var li_recipe;
+                    var h2;
+                    var ul_ingredients;
+                    var li_ingredient;
+                    var add_item_button;
+                    var input_item_box;
+                    var div_recipe;
+
+                    console.log("list loaded");
+
+                    if (localStorage.getItem("recipes") == null) {
+                        localStorage.setItem("recipes", JSON.stringify(["Misc."]));
+                    }
+                    console.log(localStorage.getItem("recipes"));
+                
+                    if (localStorage.getItem("Misc.") == null) {
+                        
+                        localStorage.setItem("Misc.", JSON.stringify([]));
+                    } 
+
+
+
+
+                    var recipe_array = JSON.parse(localStorage.getItem("recipes"));
+
+                        for (var recipe in recipe_array) {
+                            currentRecipe = recipe_array[recipe];
+                            console.log(currentRecipe);
+                            li_recipe = document.createElement("li");
+                            li_recipe.setAttribute('id', "li_" + currentRecipe);
+
+                            ul_recipes.appendChild(li_recipe);
+
+
+                            h2 = document.createElement("h2");
+                            h2.appendChild(document.createTextNode(currentRecipe));
+                            li_recipe.appendChild(h2);
+                            
+                            
+                            ul_ingredients = document.createElement("ul");
+                            ul_ingredients.setAttribute("id", "ul_" + currentRecipe);
+                            li_recipe.appendChild(ul_ingredients);
+                            var linebreak = document.createElement("br");
+                            li_recipe.appendChild(linebreak);
+
+                            var ingredient_array = JSON.parse(localStorage.getItem(currentRecipe));
+
+                            for (ingredient in ingredient_array) {
+                                currentIngredient = ingredient_array[ingredient];
+                                li_ingredient = document.createElement("li");
+                                li_ingredient.setAttribute("id", "li_" + currentRecipe + "_" + currentIngredient);
+                                li_ingredient.setAttribute("class", "ingredient-entry");
+                                li_ingredient.appendChild(document.createTextNode(currentIngredient));
+                                li_ingredient.setAttribute('onclick',"removeItem(this, '" + currentRecipe +"')");
+                                ul_ingredients.appendChild(li_ingredient);
+                            }
+
+
+                            input_item_box = document.createElement("input");
+                            input_item_box.setAttribute("type", "text");
+                            input_item_box.setAttribute("id", "input_" + currentRecipe);
+                            li_recipe.appendChild(input_item_box);
+
+                            add_item_button = document.createElement("button");
+                            add_item_button.setAttribute("onclick", "addItem('" + currentRecipe + "')");
+                            add_item_button.appendChild(document.createTextNode("Add item"));
+                            li_recipe.appendChild(add_item_button);
+                            li_recipe.appendChild(document.createElement("br"));
+                            li_recipe.appendChild(document.createElement("br"));
+
+
+
+                            if (currentRecipe != "Misc.") {
+
+
+                                var remove_recipe_button = document.createElement("button");
+                                remove_recipe_button.setAttribute("onclick", "removeRecipe('" + currentRecipe + "')");
+                                remove_recipe_button.appendChild(document.createTextNode("Remove group"));
+                                li_recipe.appendChild(remove_recipe_button);
+                            }
+
+                        }
+                    }
+                
+
+
+
+                function addRecipe() {
+                    var recipeName = prompt("Group name?");
+
+
+                    if (recipeName == null) {
+                        return;
+                    }
+
+                    if (recipeName.length == 0) {
+                        alert("Please include a name.");
+                        return;
+                    }
+
+                    if (Object.keys(localStorage).includes(recipeName)) {
+                        alert("That name has already been used.")
+                        return;
+                    }
+
+
+                    var oldList = JSON.parse(localStorage.getItem("recipes"));
+                    var recipeList = document.getElementById("recipe-list");
+                    var li = document.createElement("li");
+                    var h2 = document.createElement("h2");
+                    h2.appendChild(document.createTextNode(recipeName));
+
+                    var ul_ingredients = document.createElement("ul");
+                    ul_ingredients.setAttribute("id", "ul_" + recipeName);
+                    
+                    var input_item_box = document.createElement("input");
+                    input_item_box.setAttribute("type", "text");
+                    input_item_box.setAttribute("id", "input_" + recipeName);
+                    
+                    var add_item_button = document.createElement("button");
+                    add_item_button.setAttribute("onclick", "addItem('" + recipeName + "')");
+                    add_item_button.appendChild(document.createTextNode("Add item"));
+
+                    var remove_recipe_button = document.createElement("button");
+                    remove_recipe_button.setAttribute("onclick", "removeRecipe('" + recipeName + "')");
+                    remove_recipe_button.appendChild(document.createTextNode("Remove group"));
+
+
+                    li.setAttribute('id', "li_" + recipeName);
+                    li.appendChild(h2);
+                    li.appendChild(document.createElement("br"));
+                    li.appendChild(ul_ingredients);
+                    li.appendChild(document.createElement("br"));
+                    li.appendChild(input_item_box);
+                    li.appendChild(add_item_button);
+                    li.appendChild(document.createElement("br"));
+                    li.appendChild(document.createElement("br"));
+                    li.appendChild(remove_recipe_button);
+
+                    recipeList.appendChild(li);
+
+                    oldList.push(recipeName);
+
+                    localStorage.setItem("recipes", JSON.stringify(oldList));
+
+
+
+
+                }
+    
+                function addItem(recipe) {
+    
+                    var ul = document.getElementById("ul_" + recipe);
+                    var newEntry = document.getElementById("input_" + recipe);
+                    var li = document.createElement("li");
 
     
-</body>
-</html>
+                    li.setAttribute('id', "li_" + recipe + "_" + newEntry.value);
+                    li.setAttribute("class", "ingredient-entry");
+                    li.setAttribute('onclick',"removeItem(this, '" + recipe +"')");
+    
+                    li.appendChild(document.createTextNode(newEntry.value));
+                    ul.appendChild(li);
+
+                    if (localStorage.getItem(recipe) == null) {
+                        localStorage.setItem(recipe, JSON.stringify([]));
+                    }
+    
+                    var oldList = JSON.parse(localStorage.getItem(recipe));
+                    oldList.push(newEntry.value);
+    
+                    localStorage.setItem(recipe, JSON.stringify(oldList));
+                    
+    
+                    document.getElementById("input_" + recipe).value = "";
+                }
+    
+               function removeItem(el, recipe) {
+                    if (confirm('Remove item ' + el.textContent + '?')){
+                       el.remove();
+                       var oldList = JSON.parse(localStorage.getItem(recipe));
+                       var index = oldList.indexOf(el.textContent);
+                       oldList.splice(index, 1);
+    
+                       localStorage.setItem(recipe, JSON.stringify(oldList));
+                    }
+                }
+
+                function removeRecipe(recipeName) {
+                    if (confirm('Remove group ' + recipeName + '?')){
+                       var recipe_to_remove = document.getElementById("li_" + recipeName);
+                       recipe_to_remove.remove();
+                       var oldList = JSON.parse(localStorage.getItem("recipes"));
+                       var index = oldList.indexOf(recipeName);
+                       oldList.splice(index, 1);
+    
+                       localStorage.setItem("recipes", JSON.stringify(oldList));
+                       delete localStorage[recipeName];
+                    }
+                }
+    
+            
+            </script>
+    
+            <h1>Dynamic List</h1>
+            
+            <ul id="recipe-list"></ul>
+    
+            
+            <button onclick="addRecipe()">Add group</button>
+            <br><br><p>Click on an individual item to remove it.</p>
+            
+            <script> loadList(); console.log(localStorage); </script>
+    
+            
+        </body>
+    </html>
