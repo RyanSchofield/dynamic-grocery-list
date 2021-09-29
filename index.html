@@ -198,6 +198,12 @@
     
                     var ul = document.getElementById("ul_" + recipe);
                     var newEntry = document.getElementById("input_" + recipe);
+
+                    if (newEntry.length == 0) {
+                        return;
+                    }
+
+
                     var li = document.createElement("li");
 
     
